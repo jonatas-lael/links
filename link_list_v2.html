@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Links</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --border: #e2e0d8;
+      --text: #1a1917;
+      --muted: #9b9890;
+      --accent: #2a2927;
+      --danger: #c94a4a;
+      --radius: 10px;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+    }
+
+    header {
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* Form */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    input[type="text"],
+    input[type="url"] {
+      font-family: var(--sans);
+      font-size: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus {
+      border-color: var(--accent);
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    .btn-add {
+      margin-top: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      cursor: pointer;
+      align-self: flex-end;
+      transition: opacity 0.15s;
+    }
+
+    .btn-add:hover { opacity: 0.8; }
+
+    /* Count */
+    .list-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .list-meta span {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .btn-clear {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+      display: none;
+    }
+    .btn-clear:hover { opacity: 1; }
+    .btn-clear.visible { display: block; }
+
+    /* List */
+    #link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .link-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.18s ease;
+      transition: border-color 0.15s;
+    }
+
+    .link-item:hover { border-color: #ccc; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .link-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .link-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .link-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      fill: none;
+    }
+
+    .link-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .link-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-url {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .link-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-icon:hover { background: var(--border); }
+
+    .btn-icon.del:hover { border-color: var(--danger); background: #fdf2f2; }
+
+    .btn-icon svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn-icon.del:hover svg { stroke: var(--danger); }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--muted);
+      display: none;
+    }
+
+    .empty.visible { display: block; }
+
+    .empty svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--border);
+      fill: none;
+      stroke-width: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .empty p {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      padding: 10px 18px;
+      border-radius: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,25,23,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform: translateY(8px);
+      transition: transform 0.18s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-cancel {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px 16px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .btn-cancel:hover { border-color: #bbb; }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- <header>
+    <h1>Sistema de Links</h1>
+    <p>Sistema de Links</p>
+  </header> -->
+
+  <!-- <div class="form-card">
+    <div class="input-row">
+      <div class="input-group">
+        <label for="inp-title">Nome</label>
+        <input type="text" id="inp-title" placeholder="Ex: GitHub, Notion, YouTube…"/>
+      </div>
+      <div class="input-group">
+        <label for="inp-url">URL</label>
+        <input type="url" id="inp-url" placeholder="https://"/>
+      </div>
+      <button class="btn-add" onclick="addLink()">+ Adicionar</button>
+    </div>
+  </div> -->
+
+  <div class="list-meta">
+    <span id="count-label">0 links</span>
+    <button class="btn-clear" id="btn-clear" onclick="clearAll()">Limpar tudo</button>
+  </div>
+
+  <div id="link-list"></div>
+
+  <div class="empty" id="empty-state">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+    </svg>
+    <p>Nenhum link adicionado ainda.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" onclick="closeEdit(event)">
+  <div class="modal">
+    <p class="modal-title">Editar link</p>
+    <div class="input-group">
+      <label for="edit-title">Nome</label>
+      <input type="text" id="edit-title"/>
+    </div>
+    <div class="input-group">
+      <label for="edit-url">URL</label>
+      <input type="url" id="edit-url"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEdit()">Cancelar</button>
+      <button class="btn-add" onclick="saveEdit()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+  let links = [];
+
+  const STORAGE_KEY = 'links_v1';
+
+  function load() {
+    try { links = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { links = []; }
+    render();
+  }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+  }
+
+  function getDomain(url) {
+    try { return new URL(url).hostname; } catch { return ''; }
+  }
+
+  function getFaviconUrl(url) {
+    const domain = getDomain(url);
+    return domain ? `https://www.google.com/s2/favicons?sz=32&domain=${domain}` : null;
+  }
+
+  function render() {
+    const list = document.getElementById('link-list');
+    const empty = document.getElementById('empty-state');
+    const countLabel = document.getElementById('count-label');
+    const btnClear = document.getElementById('btn-clear');
+
+    list.innerHTML = '';
+    countLabel.textContent = `${links.length} link${links.length !== 1 ? 's' : ''}`;
+
+    if (links.length === 0) {
+      empty.classList.add('visible');
+      btnClear.classList.remove('visible');
+      return;
+    }
+
+    empty.classList.remove('visible');
+    btnClear.classList.add('visible');
+
+    links.forEach((link, i) => {
+      const item = document.createElement('div');
+      item.className = 'link-item';
+
+      const faviconUrl = getFaviconUrl(link.url);
+      const iconHTML = faviconUrl
+        ? `<img src="${faviconUrl}" alt="" onerror="useFallbackIcon(this.parentElement)">`
+        : defaultIconSVG();
+
+      item.innerHTML = `
+        <div class="link-icon">${iconHTML}</div>
+        <div class="link-info">
+          <div class="link-title">${escHtml(link.title)}</div>
+          <div class="link-url">${escHtml(link.url)}</div>
+        </div>
+        <div class="link-actions">
+          <button class="btn-icon" title="Abrir link" onclick="openLink(${i})">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </button>
+          <button class="btn-icon" title="Copiar URL" onclick="copyLink(${i})">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="btn-icon" title="Editar" onclick="openEdit(${i})">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn-icon del" title="Remover" onclick="removeLink(${i})">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      `;
+
+      list.appendChild(item);
+    });
+  }
+
+  function useFallbackIcon(container) {
+    container.innerHTML = defaultIconSVG();
+  }
+
+  function defaultIconSVG() {
+    return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`;
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function addLink() {
+    const titleEl = document.getElementById('inp-title');
+    const urlEl   = document.getElementById('inp-url');
+
+    let title = titleEl.value.trim();
+    let url   = urlEl.value.trim();
+
+    if (!url) { showToast('Insira uma URL.'); urlEl.focus(); return; }
+
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+    try { new URL(url); } catch {
+      showToast('URL inválida.'); urlEl.focus(); return;
+    }
+
+    if (!title) title = getDomain(url) || 'Link sem título';
+
+    links.unshift({ title, url, addedAt: Date.now() });
+
+    save();
+    render();
+
+    titleEl.value = '';
+    urlEl.value   = '';
+    titleEl.focus();
+    showToast('Link adicionado!');
+  }
+
+  function removeLink(i) {
+    links.splice(i, 1);
+
+    save();
+    render();
+    showToast('Link removido.');
+  }
+
+  function openLink(i) {
+    window.open(links[i].url, '_blank', 'noopener,noreferrer');
+  }
+
+  function copyLink(i) {
+    navigator.clipboard.writeText(links[i].url).then(() => showToast('URL copiada!'));
+  }
+
+  let editIndex = -1;
+
+  function openEdit(i) {
+    editIndex = i;
+    document.getElementById('edit-title').value = links[i].title;
+    document.getElementById('edit-url').value = links[i].url;
+    document.getElementById('modal-overlay').classList.add('open');
+    document.getElementById('edit-title').focus();
+  }
+
+  function closeEdit(e) {
+    if (e && e.target !== document.getElementById('modal-overlay')) return;
+    document.getElementById('modal-overlay').classList.remove('open');
+    editIndex = -1;
+  }
+
+  function saveEdit() {
+    if (editIndex < 0) return;
+    let title = document.getElementById('edit-title').value.trim();
+    let url   = document.getElementById('edit-url').value.trim();
+
+    if (!url) { showToast('Insira uma URL.'); return; }
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    try { new URL(url); } catch { showToast('URL inválida.'); return; }
+    if (!title) title = getDomain(url) || 'Link sem título';
+
+    links[editIndex] = { ...links[editIndex], title, url };
+    save();
+    render();
+    document.getElementById('modal-overlay').classList.remove('open');
+    editIndex = -1;
+    showToast('Link atualizado!');
+  }
+
+  function clearAll() {
+    if (!confirm('Remover todos os links?')) return;
+    links = [];
+
+    save();
+    render();
+    showToast('Lista limpa.');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.target.id === 'inp-title' || e.target.id === 'inp-url')) {
+      addLink();
+    }
+  });
+
+  load();
+</script>
+</body>
+</html>
